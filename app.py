@@ -40,13 +40,6 @@ def Temperatura():
 
 
 
-    
-    
-
-
-
-
-
 
 if __name__ == "__main__":
     app.run(socket.gethostname(), port=80)
