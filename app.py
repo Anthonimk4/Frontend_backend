@@ -1,8 +1,9 @@
 import pytds
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import socket
 from temperatura import temp
 import json
+from products import products
 app = Flask(__name__)
 
 with open('config.JSON') as config_file:
@@ -21,22 +22,58 @@ cursor.execute('SELECT * FROM temperaturas')
 
 @app.route('/ping', methods=['GET'])
 def ping():
+    print(request.json)
+    return "res"
     
-    return jsonify({"luis": 1})
+@app.route('/tres', methods=['POST'])
+def tres():
+    print(request.json)
+    return "res"
 
 
-@app.route('/products')
-def getproducts():
+@app.route('/id')
+def id():
+    cursor.execute("SELECT TOP (1) id FROM temperaturas ORDER by Id DESC;")
+    Tem = cursor.fetchone()
+    Tmp = (Tem[0])
+    return Tmp
+        
+   
+                 
+@app.route('/zona')
+def zona():
+    cursor.execute("SELECT TOP (1) zona_id FROM temperaturas ORDER by Id DESC;")
+    Tem = cursor.fetchone()
+        
+    return Tem 
 
-    return jsonify(products)
+@app.route('/temp')
+def temp():
+    cursor.execute("SELECT TOP (1) id, valor  FROM temperaturas ORDER by Id DESC;")
+    Tem = cursor.fetchone()
+    Tmp = (Tem[1])    
+    return jsonify({"name": Tmp})      
 
 
+@app.route('/fecha')
+def fecha():
+    cursor.execute("SELECT TOP (1) created_at  FROM temperaturas ORDER by Id DESC;")
+    Tem = cursor.fetchone()
+        
+
+    return jsonify(Tem)   
 
 @app.route('/temperatura')
-def Temperatura():
-    Temperatura = int (27)
-    return jsonify({"Temp": temp})
+def temperatura():
 
+    return jsonify(
+
+        {"id": id()},
+        {"zona": zona()}
+    
+    
+    
+    )  
 
 
 
